@@ -2,58 +2,84 @@
 import Layout from "../layouts/Layout.astro";
 
 import Header from "../components/Header.astro";
-import CTA from "../components/CTA.astro";
-import FeatureList from "../components/FeatureList.astro";
-
-import Timeline from "../components/Timeline.astro";
 
 import data from "../data/site.json";
+import {Modal} from "flowbite";
 ---
 
 <Layout title={data.siteName}>
   <main>
     <Header />
-    <!--<CTA />
-    <FeatureList />
-    <Timeline />-->
 
-    <button data-modal-target="hoechstpreisfalleModal" data-modal-toggle="hoechstpreisfalleModal" class="text-base font-semibold leading-7 text-primary-600 flex items-center hover:underline" >
-      Mehr erfahren <span aria-hidden="true"  class="ml-1"> </span>
-    </button>
+    <!-- Formular -->
+    <div class="container mx-auto mt-10">
+      <form id="contactForm" action="#">
+        <label for="name" class="block text-sm font-medium text-gray-700">Email address</label>
+        <input type="text" id="name" name="name" class="mt-1 block w-full"  />
 
-    <!-- 1. Höchstpreisfalle Modal -->
-    <div id="hoechstpreisfalleModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-      <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <button data-modal-target="successModal" data-modal-toggle="successModal"
+            type="submit"
+            class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+
+    <!-- Modal -->
+    <div id="successModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+      <div class="relative p-4 w-full max-w-md h-full md:h-auto">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <!-- Modal header -->
-          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-              Die Höchstpreisfalle
-            </h3>
-            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="hoechstpreisfalleModal">
-              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          <div class="flex justify-end p-2">
+            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="successModal">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414l-5 5a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414z" clip-rule="evenodd"></path>
               </svg>
-              <span class="sr-only">Schließen</span>
             </button>
           </div>
           <!-- Modal body -->
-          <div class="p-4 md:p-5 space-y-4">
-            <p class="text-base leading-relaxed text-gray-700 dark:text-gray-400">Ein Verkäufer wird häufig die Meinung von mehreren Immobilienmaklern einholen,
-              bevor er einen Verkaufspreis festlegt. In dieser Euphorie vergisst man leicht, dass es auch immer einen
-              Käufer geben muss, der bereit ist, diesen Preis auch zu bezahlen.</p>
-            <p class="text-base leading-relaxed text-gray-700 dark:text-gray-400">
-              Nur zu leicht entscheidet sich ein Verkäufer für denjenigen Makler, der ihm den höchsten Preis zusagt.
-              Dies ist der größte Fehler, den ein Verkäufer machen kann.
-            </p>
-          </div>
-          <!-- Modal footer -->
-          <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-            <button data-modal-hide="hoechstpreisfalleModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Schließen</button>
+          <div class="p-6 text-center">
+            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Form successfully submitted!</h3>
+            <button id="closeModalBtn" type="button" class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" data-modal-hide="successModal">
+              Close
+            </button>
           </div>
         </div>
       </div>
     </div>
   </main>
+    <script is:inline>
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('contactForm');
+        const modalElement = document.getElementById('successModal');
+        const modal = new Modal(modalElement, {
+          backdrop: 'dynamic', // Ensures the backdrop is dynamic
+          backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
+          closable: true
+        });
+
+        function showSuccessModal() {
+          modal.show();
+        }
+
+        // Event listener for the close button
+        document.getElementById('closeModalBtn').addEventListener('click', function () {
+          const modalElement = document.getElementById('successModal');
+          const modal = new Modal(modalElement);
+
+          modal.hide();
+        });
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          showSuccessModal();
+
+        });
+      });
+
+
+    </script>
 </Layout>
